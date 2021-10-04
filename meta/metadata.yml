@@ -1,0 +1,60 @@
+---
+title: My Travels
+author:
+  - John A. Than
+year: 2021
+identifier:
+  - scheme: ISBN
+    text: 3462378462378
+publisher: Penguin
+rights: © 2021 John A. Than
+lang: es-ES
+fontsize: 12pt
+linestretch: 1.08
+documentclass: book
+mainfont: EB Garamond
+monofont: EB Garamond
+toc-title: My Index
+tags: []
+indent: true
+version: 1
+pagestyle: plain
+papersize: a5
+header-includes:
+  - \pagenumbering{gobble}
+include-before: |
+    &nbsp;
+
+    &nbsp;
+
+    _To my wife_  
+    for marrying me
+
+    &nbsp;
+
+    _For my kids_  
+    For being born
+
+    * * *
+
+    December 2021
+
+    &nbsp;
+
+    1st Edition © 2021 John A. Than
+
+    Cover: Barbara Seville
+
+    &nbsp;
+
+    All rights are reserved. No part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means, electronic, mechanical, photocopying, recording or otherwise, without prior permission of the author or the rights holder.
+
+    &nbsp;
+
+    This is a work of fiction. Names, characters, places and incidents either are products of the author’s imagination or are used fictitiously. Any resemblance to actual events or locales or persons, living or dead, is entirely coincidental.
+
+    &nbsp;
+    
+    ISBN 000-1-0000-0000-2
+
+---
