@@ -1,0 +1,72 @@
+name: publish book artifact
+on:
+  release:
+    types: [published]
+jobs:
+  build-docker-image:
+    name: Build and upload docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pull source
+        uses: actions/checkout@v1
+      
+      - name: Fix permissions
+        run: sudo chmod 777 chapters/*
+        
+      - name: Add version to book
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+        run: |
+          export VERSION=`echo $GITHUB_REF | cut -d "/" -f 3`
+          export DATE=`date +%d-%m-%Y`
+          echo "::set-env name=ODT_FILE::Book.${VERSION}.odt"
+          echo "::set-env name=DOCX_FILE::Book.${VERSION}.docx"
+          echo "::set-env name=TXT_FILE::Book.${VERSION}.txt"
+          echo "::set-env name=PDF_FILE::Book.${VERSION}.pdf"
+          echo "::set-env name=EPUB_FILE::Book.${VERSION}.epub"
+          sed -i "s@{version}@${DATE}\t(${VERSION})@g" meta/metadata.yml
+
+      - name: Show metadata
+        run: cat meta/metadata.yml
+          
+      - name: Generate book with docker
+        run: docker run -v `pwd`/fonts:/root/.fonts -v `pwd`:/data --entrypoint "./script.sh" pandoc/latex:2.10
+
+      - name: Show files to upload
+        run: |
+          echo $PDF_FILE - $EPUB_FILE - $TXT_FILE - $DOCX_FILE - $ODT_FILE
+
+      - name: Upload PDF to release
+        uses: Shopify/upload-to-release@master
+        with:
+          name: ${{env.PDF_FILE}}
+          path: build/book.pdf
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload ODT to release
+        uses: Shopify/upload-to-release@master
+        with:
+          name: ${{env.ODT_FILE}}
+          path: build/book.odt
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload DOCX to release
+        uses: Shopify/upload-to-release@master
+        with:
+          name: ${{env.DOCX_FILE}}
+          path: build/book.docx
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload TXT to release
+        uses: Shopify/upload-to-release@master
+        with:
+          name: ${{env.TXT_FILE}}
+          path: build/book.txt
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload EPUB to release
+        uses: Shopify/upload-to-release@master
+        with:
+          name: ${{env.EPUB_FILE}}
+          path: build/book.epub
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
